@@ -1,0 +1,350 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+function change_shtat_menu() {
+  $items = array();
+
+  $items['change_shtat'] = array(
+    'title' => 'Изменение штатного расписания',
+    'page callback' => 'change_shtat_page',
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+  $items['change_shtat/list'] = array(
+    'title' => 'Изменение штатного расписания',
+    'page callback' => 'change_shtat_list',
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+  $items['change_shtat/add'] = array(
+    'title' => 'Изменение штатного расписания',
+    'page callback' => 'change_shtat_save',
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+  $items['change_shtat/edit/%'] = array(
+    'title' => 'Изменение штатного расписания',
+    'page callback' => 'change_shtat_save',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+
+  $items['hr/data/change_shtat/list'] = array(
+    'title' => 'Сохранение графика отпусков',
+    'page callback' => 'change_shtat_get_list_changes',
+    //'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+  $items['hr/data/change_shtat/get_form_edit'] = array(
+    'title' => 'Сохранение графика отпусков',
+    'page callback' => 'change_shtat_get_form_edit',
+    //'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+  $items['hr/data/change_shtat/get_change_id'] = array(
+    'title' => 'Сохранение графика отпусков',
+    'page callback' => 'change_shtat_get_change_id',
+    //'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+  $items['hr/data/change_shtat/save'] = array(
+    'title' => 'Сохранение графика отпусков',
+    'page callback' => 'change_shtat_save',
+    //'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+  
+  $items['hr/data/change_shtat/structs'] = array(
+    'title' => 'Сохранение графика отпусков',
+    'page callback' => 'change_shtat_structs',
+    //'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );  
+
+  $items['hr/data/change_shtat/cells'] = array(
+    'title' => 'Сохранение графика отпусков',
+    'page callback' => 'change_shtat_cells',
+    //'page arguments' => array(1),
+    'access callback' => TRUE,
+    'file' => 'change_shtat.inc',
+  );
+
+  return $items;
+}
+
+function change_shtat_page() {
+  drupal_add_css(drupal_get_path('module', 'change_shtat') . '/css/change_shtat.css');
+  //drupal_add_css(drupal_get_path('module', 'change_shtat') . '/js/dist/themes/default/style.min.css');
+  //drupal_add_css(drupal_get_path('module', 'change_shtat') . '/css/w2ui.css');
+  //drupal_add_js('http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js', 'external');
+  //drupal_add_js(drupal_get_path('module', 'change_shtat') . '/js/w2ui.js');
+  // drupal_add_js(drupal_get_path('module', 'change_shtat') . '/js/dist/jstree.js');
+  drupal_add_js(drupal_get_path('module', 'change_shtat') . '/js/change_shtat.js');
+
+  //https://habrahabr.ru/post/303186/
+  //drupal_add_library('system', 'ui.datepicker');
+  //drupal_add_js(drupal_get_path('module', 'leave_shedule') . '/js/jquery.datepicker.extension.range.min.js');
+  //$cur_year = getdate();
+  //$_year = isset($year) ? $year : $cur_year['year'] + 1;
+  //drupal_set_title('График отпусков на ' . $_year);
+  //Передаем параметры в javascript
+  /* $arr_settings = array(
+    'foo' => 'hello!',
+    'holidays' => get_unix_holidays($_year),
+    'leave_days' => get_leave_days($_year),
+    'total_leave_days' => 28, //количество дней отпуска к выбору
+    'year' => $_year,
+    );
+    drupal_add_js($arr_settings, 'setting'); */
+
+  libraries_load('jstree');
+  libraries_load('w2ui');
+  /*$lib = libraries_load('w2ui');
+  if ($lib['loaded']) {
+    $mes = 'OK';
+  }
+  else {
+    $mes = $lib['error message'];
+  }
+  debug($mes);*/
+
+  $output = '<div id="panel"></div>';
+  $output .= '<div id="jstree">Load</div>';
+  $output .= '<div id="cells"></div>';
+
+  return $output; //theme('change_shtat_page');
+  //$output = '<div id="form" style="width:100%;"></div>';
+  //$output .= '<input type="button" id="btn_clear" value="Clear"/>';
+  //$output .= '<input type="button" id="btn_change" value="Change"/>';
+  //$output .= '<input type="button" id="btn_get" value="Get"/>';
+  //return $output;
+}
+
+function change_shtat_list() {
+  drupal_add_js(drupal_get_path('module', 'change_shtat') . '/js/cs_list.js');
+
+  $output = '<div id="cs-list" style="width: 100%; height: 350px;"></div>';
+  //return theme('change_shtat_list');
+
+  return $output;
+}
+
+function change_shtat_get_form_edit() {
+  echo theme('change_shtat_list');
+}
+
+function change_shtat_save($recid = 0) {
+  drupal_add_js(drupal_get_path('module', 'change_shtat') . '/js/cs_save.js');
+
+  //Передаем параметры в javascript
+  $arr_settings = array(
+    //'foo' => 'hello!',
+    //'recid' => $recid,
+    'form_record' => get_rec_id($recid),
+    'recs_cells' => get_recs_cells($recid),
+  );
+  //debug(get_rec_id($recid));
+  drupal_add_js($arr_settings, 'setting');
+
+  return theme('change_shtat_save');
+  //$leave_dates = isset($_POST['leave_dates']) ? $_POST['leave_dates'] : array();
+  //debug($leave_dates);
+  //$range_leave_dates = get_range_leave_dates($leave_dates);
+  //foreach($range_leave_dates as $k => $v) {
+  //drupal_write_record($table, $record);
+  //}
+  //drupal_json_output($range_leave_dates);
+}
+
+function change_shtat_theme() {
+  return array(
+    'change_shtat_page' => array(
+      //'variables' => array('var_name' => NULL),
+      'template' => '/templates/change_shtat_page',
+    ),
+    'change_shtat_list' => array(
+      //'variables' => array('var_name' => NULL),
+      'template' => '/templates/change_shtat_list',
+    ),
+    'change_shtat_save' => array(
+      //'variables' => array('var_name' => NULL),
+      'template' => '/templates/change_shtat_save',
+    ),
+  );
+}
+
+function change_shtat_get_list_changes() {
+  $recs = db_select('cs_list', 'list')
+      ->fields('list')
+      //->condition('n.type', 'page')
+      //->condition('n.uid', 1)
+      ->execute()
+      ->fetchAll();
+
+  foreach ($recs as $rec) {
+    $result['records'][] = array(
+      'recid' => $rec->recid,
+      'dep_id' => $rec->dep_id,
+      'date_from' => format_date(strtotime($rec->date_from), 'custom', 'd.m.Y'),
+      'name' => $rec->name,
+      'status' => $rec->status,
+    );
+  }
+
+  //$result = array();
+  //$result['total'] = 8;
+
+  drupal_json_output($result);
+}
+
+function change_shtat_get_change_id() {
+  $recid = 1; //$_POST['recid'];
+  //debug($recid);
+  $rec = db_select('cs_list', 'list')
+      ->fields('list')
+      ->condition('list.recid', $recid)
+      //->condition('n.uid', 1)
+      ->execute()
+      ->fetchAssoc();
+
+  //debug($rec);
+
+  $result['record'] = array(
+    //'recid' => $rec['recid'],
+    //'dep_id' => $rec['dep_id'],
+    'date_from' => format_date(strtotime($rec['date_from']), 'custom', 'd.m.Y'),
+    'name' => $rec['name'],
+      //'status' => $rec['status'],
+  );
+
+
+  //$result = array();
+  //$result['total'] = 8;
+
+  drupal_json_output($result);
+  //return $rec;
+}
+
+function change_shtat_structs() {
+  $result[] = array(
+    'id' => 10766,
+    'parent' => '#',
+    'text' => 'Управление организации труда и заработной платы',
+    'state' => array(
+      'selected' => FALSE,
+      'disabled' => FALSE,
+      'opened' => TRUE,
+    ),
+  );
+  
+  $result[] = array(
+    'id' => 10767,
+    'parent' => 10766,
+    'text' => 'Отдел оплаты труда',
+    'state' => array(
+      'selected' => FALSE,
+      'disabled' => FALSE,
+      'opened' => FALSE,
+    ),
+  );
+  
+  $result[] = array(
+    'id' => 10768,
+    'parent' => 10766,
+    'text' => 'Отдел экономики труда',
+    'state' => array(
+      'selected' => FALSE,
+      'disabled' => FALSE,
+      'opened' => FALSE,
+    ),
+  );
+  
+  $result[] = array(
+    'id' => 10769,
+    'parent' => 10768,
+    'text' => 'Бюро учета трудовых затрат',
+    'state' => array(
+      'selected' => FALSE,
+      'disabled' => FALSE,
+      'opened' => FALSE,
+    ),
+  );   
+  
+  drupal_json_output($result);
+}
+
+function change_shtat_cells() {
+  $request = json_decode($_POST['request'], true);
+  //$file = file_get_contents('php://input');
+  $structid = intval($request['structid']);
+
+  for ($i = 0; $i < 7; $i++) {
+    $result['records'][] = array(
+      'recid' => $i,
+      'fname' => 'Начальник отдела',
+      'lname' => $lname,
+      'email' => $structid,
+    );
+  }
+  
+  //var_dump($file);
+  //exit();
+  
+  //print_r($result);
+  //exit();
+  
+  //$result['records'][] = $_POST;
+
+  drupal_json_output($result);
+}
+
+function change_shtat_libraries_info() {
+  $libraries['jstree'] = array(
+    'name' => 'jsTree plugin',
+    'vindor url' => 'https://www.jstree.com',
+    'download url' => 'https://github.com/vakata/jstree/zipball/3.3.3',
+    'version arguments' => array(
+      'file' => 'readme.txt',
+      'pattern' => '/Version (\d+)/',
+    //'lines' => 60,
+    ),
+    'files' => array(
+      'js' => array('jstree.js'),
+      'css' => array('themes/default/style.min.css'),
+    ),
+  );
+  
+  $libraries['w2ui'] = array(
+    'name' => 'w2ui',
+    'vindor url' => 'https://www.w2ui.com',
+    'download url' => 'http://w2ui.com/web/downloads/w2ui-1.5.rc1.zip',
+    'version arguments' => array(
+      'file' => 'w2ui.min.js',
+      'pattern' => '/w2ui (\d+)/',
+    ),
+    'files' => array(
+      'js' => array('w2ui.min.js'),
+      'css' => array('w2ui.min.css'),
+    ),
+  );  
+
+  return $libraries;
+}
