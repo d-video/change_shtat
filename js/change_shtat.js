@@ -8,7 +8,7 @@
       //var year = Drupal.settings.year;
 
       function do_request() {
-        $.ajax({
+        /*$.ajax({
           url: '/hr/data/change_shtat/cells',
           type: 'POST',
           data: {param: 1, structid: 12345},
@@ -16,7 +16,8 @@
             console.log(data);
             w2ui['cells'].reload();
           }
-        });
+        });*/
+        alert('Adding');
       }
 
       $('#panel').w2toolbar({
