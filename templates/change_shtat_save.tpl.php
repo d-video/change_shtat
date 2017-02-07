@@ -23,6 +23,9 @@
   <div class="w2ui-page page-1">
     <div id="cells" style="width: 100%; height: 200px;"></div>
   </div>
+  <div class="w2ui-page page-2">
+    <div id="layout" style="width: 100%; height: 400px;"></div>
+  </div>  
 
   <div class="w2ui-buttons">
     <button class="w2ui-btn" name="reset">Reset</button>

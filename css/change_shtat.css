@@ -45,6 +45,7 @@ tr, tr.even {
   margin-right: 2px;
   //font-size: 0.9em;
   font-size: 11px;
+  overflow: auto;
 }
 
 #jstree ul {
@@ -54,6 +55,10 @@ tr, tr.even {
 
 #cells {
   height: 400px;
+}
+
+#cells tbody {
+  border-top: none;
 }
 
 #panel {

@@ -4,5 +4,5 @@ version = "7.x-1.x"
 core = "7.x"
 package = HR
 
-stylesheets[all][] = css/w2ui.css
-scripts[] = js/w2ui.js
+;stylesheets[all][] = css/w2ui.css
+;scripts[] = js/w2ui.js

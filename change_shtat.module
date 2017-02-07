@@ -152,6 +152,7 @@ function change_shtat_get_form_edit() {
 }
 
 function change_shtat_save($recid = 0) {
+  libraries_load('w2ui');
   drupal_add_js(drupal_get_path('module', 'change_shtat') . '/js/cs_save.js');
 
   //Передаем параметры в javascript
